@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="kleanble_perm_scan_s_title">Nearby Device Scanning</string>
+    <string name="kleanble_perm_scan_s_message">To discover your hardware, this app needs permission to scan for nearby Bluetooth devices.</string>
+
+    <string name="kleanble_perm_connect_s_title">Bluetooth Connection</string>
+    <string name="kleanble_perm_connect_s_message">To interact with your Bluetooth devices after they are found, this app requires permission to connect to and exchange data with them.</string>
+
+    <string name="kleanble_perm_advertise_s_title">Bluetooth Visibility</string>
+    <string name="kleanble_perm_advertise_s_message">To allow other devices to discover and connect to this app, permission to advertise over Bluetooth is required.</string>
+
+    <string name="kleanble_perm_fine_location_title">Location Access for Bluetooth</string>
+    <string name="kleanble_perm_fine_location_message">On this version of Android, location access is required to find nearby Bluetooth devices. Your location data is not stored or used for any other purpose.</string>
+
+    <string name="kleanble_perm_admin_legacy_title">Bluetooth Management</string>
+    <string name="kleanble_perm_admin_legacy_message">This app needs to manage Bluetooth settings to find other devices or make itself visible.</string>
+</resources>
