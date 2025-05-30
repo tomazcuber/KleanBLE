@@ -3,9 +3,13 @@ package com.tomazcuber.kleanble.permissionshelper.domain.usecase
 import com.tomazcuber.kleanble.common.domain.model.BleOperation
 import com.tomazcuber.kleanble.permissionshelper.domain.model.BlePermissionRequirement
 import com.tomazcuber.kleanble.permissionshelper.domain.model.BlePermissionsReport
+import com.tomazcuber.kleanble.permissionshelper.domain.repository.BuildVersionRepository
 import com.tomazcuber.kleanble.permissionshelper.domain.repository.PermissionRepository
 
-class GetPermissionsReportForBleOperationUseCase(private val permissionRepository: PermissionRepository) {
+class GetPermissionsReportForBleOperationUseCase(
+    private val permissionRepository: PermissionRepository,
+    private val buildVersionRepository: BuildVersionRepository
+) {
     private val allPossibleRequirements = listOf(
         BlePermissionRequirement.BluetoothScanSAndAbove,
         BlePermissionRequirement.BluetoothConnectSAndAbove,
@@ -42,7 +46,7 @@ class GetPermissionsReportForBleOperationUseCase(private val permissionRepositor
         val necessaryRequirements = mapOperationsToRequirements(operations)
 
         val checkContext = BlePermissionRequirement.CheckContext(
-            sdkVersion = permissionRepository.getCurrentSdkLevel(),
+            sdkVersion = buildVersionRepository.getCurrentSdkLevel(),
             appDerivesLocationFromScan = appDerivesLocationFromScan
         )
         val applicableRequirements = necessaryRequirements.filter { it.isRequired(checkContext) }

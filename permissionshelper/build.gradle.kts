@@ -46,5 +46,9 @@ dependencies {
     testImplementation(libs.strikt)
     testImplementation(libs.kotlinx.coroutines.test)
 
+    implementation(project.dependencies.platform(libs.koin.bom))
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+
     implementation(project(":commonutils"))
 }

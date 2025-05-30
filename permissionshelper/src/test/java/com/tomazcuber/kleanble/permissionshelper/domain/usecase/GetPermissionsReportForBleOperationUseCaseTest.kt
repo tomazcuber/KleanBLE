@@ -3,6 +3,7 @@ package com.tomazcuber.kleanble.permissionshelper.domain.usecase
 import android.Manifest
 import com.tomazcuber.kleanble.common.domain.model.BleOperation
 import com.tomazcuber.kleanble.permissionshelper.domain.model.BlePermissionRequirement
+import com.tomazcuber.kleanble.permissionshelper.domain.repository.BuildVersionRepository
 import com.tomazcuber.kleanble.permissionshelper.domain.repository.PermissionRepository
 import io.mockk.coEvery
 import io.mockk.every
@@ -22,12 +23,14 @@ import strikt.assertions.isTrue
 class GetPermissionsReportForBleOperationUseCaseTest {
 
     private lateinit var mockPermissionRepository: PermissionRepository
+    private lateinit var mockBuildVersionRepository: BuildVersionRepository
     private lateinit var getPermissionsReportUseCase: GetPermissionsReportForBleOperationUseCase
 
     @BeforeEach
     fun setUp(){
         mockPermissionRepository = mockk()
-        getPermissionsReportUseCase = GetPermissionsReportForBleOperationUseCase(mockPermissionRepository)
+        mockBuildVersionRepository = mockk()
+        getPermissionsReportUseCase = GetPermissionsReportForBleOperationUseCase(mockPermissionRepository, mockBuildVersionRepository)
     }
 
     @Nested
@@ -38,7 +41,7 @@ class GetPermissionsReportForBleOperationUseCaseTest {
 
         @BeforeEach
         fun setup() {
-            every { mockPermissionRepository.getCurrentSdkLevel() } returns sdkVersion
+            every { mockBuildVersionRepository.getCurrentSdkLevel() } returns sdkVersion
         }
 
         @Test
@@ -46,7 +49,7 @@ class GetPermissionsReportForBleOperationUseCaseTest {
         fun  `scan operation with all permissions granted`() = runTest {
             val operations = setOf(BleOperation.SCAN_DEVICES)
 
-            every { mockPermissionRepository.getCurrentSdkLevel() } returns 31
+            every { mockBuildVersionRepository.getCurrentSdkLevel() } returns 31
             coEvery { mockPermissionRepository.isPermissionGranted(any()) } returns true
 
             val permissionsReport = getPermissionsReportUseCase(operations)
@@ -82,7 +85,7 @@ class GetPermissionsReportForBleOperationUseCaseTest {
         fun  `connect operation with all permissions granted`() = runTest {
             val operations = setOf(BleOperation.CONNECT_AND_COMMUNICATE)
 
-            every { mockPermissionRepository.getCurrentSdkLevel() } returns 31
+            every { mockBuildVersionRepository.getCurrentSdkLevel() } returns 31
             coEvery { mockPermissionRepository.isPermissionGranted(Manifest.permission.BLUETOOTH_CONNECT) } returns true
 
             val permissionsReport = getPermissionsReportUseCase(operations)
@@ -192,7 +195,7 @@ class GetPermissionsReportForBleOperationUseCaseTest {
 
         @BeforeEach
         fun setup() {
-            every { mockPermissionRepository.getCurrentSdkLevel() } returns sdkVersion
+            every { mockBuildVersionRepository.getCurrentSdkLevel() } returns sdkVersion
         }
 
         @Test

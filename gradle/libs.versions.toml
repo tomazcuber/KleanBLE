@@ -6,7 +6,7 @@ junitJupiter = "5.12.2"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
 material = "1.12.0"
-koin-bom = "4.0.3"
+koin-bom = "4.0.4"
 mockk = "1.14.2"
 strikt = "0.35.1"
 kotlinxCoroutinesTest = "1.10.2"
@@ -19,6 +19,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
 koin-core = { module = "io.insert-koin:koin-core" }
+koin-android = { module = "io.insert-koin:koin-android"}
 # JUnit 5 - Jupiter
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiter" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiter" }
