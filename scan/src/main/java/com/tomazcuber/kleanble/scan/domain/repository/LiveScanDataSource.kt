@@ -8,13 +8,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 /**
- * Defines the contract for the data layer's scanning responsibilities.
+ * Defines the contract for the live data source of BLE scan results.
  *
- * This interface abstracts the underlying data source for BLE scanning, allowing the domain layer
- * to remain independent of the Android framework. The implementation of this interface
- * will reside in the data layer.
+ * This interface abstracts the underlying hardware-specific BLE scanning framework,
+ * allowing the domain and repository layers to remain decoupled from the platform details.
  */
-interface ScanRepository {
+interface LiveScanDataSource {
 
     /**
      * A hot flow that emits the current state of the BLE scanner (e.g., Idle, Scanning, Error).

@@ -1,10 +1,9 @@
-package com.tomazcuber.kleanble.scan.domain.usecase
-
-import com.tomazcuber.kleanble.scan.domain.FakeScanRepository
+import com.tomazcuber.kleanble.scan.domain.FakeScanDataSource
 import com.tomazcuber.kleanble.scan.domain.model.BleScanFilter
 import com.tomazcuber.kleanble.scan.domain.model.BleScanSettings
 import com.tomazcuber.kleanble.scan.domain.model.ScanCallbackType
 import com.tomazcuber.kleanble.scan.domain.model.ScanMode
+import com.tomazcuber.kleanble.scan.domain.usecase.StartScanUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
@@ -14,16 +13,15 @@ import strikt.assertions.isEqualTo
 import strikt.assertions.isNotNull
 import strikt.assertions.isTrue
 
-
 class StartScanUseCaseTest {
 
-    private lateinit var fakeScanRepository: FakeScanRepository
+    private lateinit var fakeScanDataSource: FakeScanDataSource
     private lateinit var startScanUseCase: StartScanUseCase
 
     @BeforeEach
     fun setUp() {
-        fakeScanRepository = FakeScanRepository()
-        startScanUseCase = StartScanUseCase(fakeScanRepository)
+        fakeScanDataSource = FakeScanDataSource()
+        startScanUseCase = StartScanUseCase(fakeScanDataSource)
     }
 
     @Test
@@ -33,12 +31,13 @@ class StartScanUseCaseTest {
             scanMode = ScanMode.LOW_LATENCY,
             callbackType = ScanCallbackType.ALL_MATCHES
         )
+        val filters = emptyList<BleScanFilter>()
 
         // Act
-        startScanUseCase(settings)
+        startScanUseCase(settings, filters)
 
         // Assert
-        expectThat(fakeScanRepository.startScanCalled).isTrue()
+        expectThat(fakeScanDataSource.startScanCalled).isTrue()
     }
 
     @Test
@@ -55,7 +54,7 @@ class StartScanUseCaseTest {
         startScanUseCase(settings, filters)
 
         // Assert
-        expectThat(fakeScanRepository.receivedFilters)
+        expectThat(fakeScanDataSource.receivedFilters)
             .isNotNull()
             .hasSize(1)
             .first()

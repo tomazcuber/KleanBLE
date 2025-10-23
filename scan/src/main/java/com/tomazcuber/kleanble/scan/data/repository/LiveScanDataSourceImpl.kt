@@ -1,4 +1,4 @@
-package com.tomazcuber.kleanble.scan.data
+package com.tomazcuber.kleanble.scan.data.repository
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
@@ -14,7 +14,7 @@ import com.tomazcuber.kleanble.scan.domain.model.BleScanFilter
 import com.tomazcuber.kleanble.scan.domain.model.BleScanResult
 import com.tomazcuber.kleanble.scan.domain.model.BleScanSettings
 import com.tomazcuber.kleanble.scan.domain.model.BleScanState
-import com.tomazcuber.kleanble.scan.domain.repository.ScanRepository
+import com.tomazcuber.kleanble.scan.domain.repository.LiveScanDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -24,10 +24,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 @SuppressLint("MissingPermission")
-internal class ScanRepositoryImpl(
+internal class LiveScanDataSourceImpl(
     private val context: Context,
     private val dispatcher: CoroutineDispatcher
-) : ScanRepository {
+) : LiveScanDataSource {
 
     private val bluetoothManager: BluetoothManager by lazy { context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager }
     private val bluetoothAdapter: BluetoothAdapter? by lazy { bluetoothManager.adapter }

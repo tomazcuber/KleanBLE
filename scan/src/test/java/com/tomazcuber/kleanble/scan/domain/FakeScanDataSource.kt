@@ -4,19 +4,19 @@ import com.tomazcuber.kleanble.scan.domain.model.BleScanFilter
 import com.tomazcuber.kleanble.scan.domain.model.BleScanResult
 import com.tomazcuber.kleanble.scan.domain.model.BleScanSettings
 import com.tomazcuber.kleanble.scan.domain.model.BleScanState
-import com.tomazcuber.kleanble.scan.domain.repository.ScanRepository
+import com.tomazcuber.kleanble.scan.domain.repository.LiveScanDataSource
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 /**
- * A fake implementation of the [ScanRepository] for use in unit tests.
+ * A fake implementation of the [LiveScanDataSource] for use in unit tests.
  *
  * This class allows for controlling the state and results flows and for verifying
- * that repository methods are called as expected.
+ * that data source methods are called as expected.
  */
-internal class FakeScanRepository : ScanRepository {
+internal class FakeScanDataSource : LiveScanDataSource {
 
     private val _scanState = MutableStateFlow<BleScanState>(BleScanState.Idle)
     override val scanState = _scanState.asStateFlow()

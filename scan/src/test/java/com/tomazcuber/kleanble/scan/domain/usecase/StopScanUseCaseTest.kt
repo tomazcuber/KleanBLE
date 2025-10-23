@@ -1,6 +1,6 @@
 package com.tomazcuber.kleanble.scan.domain.usecase
 
-import com.tomazcuber.kleanble.scan.domain.FakeScanRepository
+import com.tomazcuber.kleanble.scan.domain.FakeScanDataSource
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
@@ -8,13 +8,13 @@ import strikt.assertions.isTrue
 
 class StopScanUseCaseTest {
 
-    private lateinit var fakeScanRepository: FakeScanRepository
+    private lateinit var fakeScanDataSource: FakeScanDataSource
     private lateinit var stopScanUseCase: StopScanUseCase
 
     @BeforeEach
     fun setUp() {
-        fakeScanRepository = FakeScanRepository()
-        stopScanUseCase = StopScanUseCase(fakeScanRepository)
+        fakeScanDataSource = FakeScanDataSource()
+        stopScanUseCase = StopScanUseCase(fakeScanDataSource)
     }
 
     @Test
@@ -23,6 +23,6 @@ class StopScanUseCaseTest {
         stopScanUseCase()
 
         // Assert
-        expectThat(fakeScanRepository.stopScanCalled).isTrue()
+        expectThat(fakeScanDataSource.stopScanCalled).isTrue()
     }
 }

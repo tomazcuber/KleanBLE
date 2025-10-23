@@ -1,6 +1,6 @@
 package com.tomazcuber.kleanble.scan.domain.usecase
 
-import com.tomazcuber.kleanble.scan.domain.FakeScanRepository
+import com.tomazcuber.kleanble.scan.domain.FakeScanDataSource
 import com.tomazcuber.kleanble.scan.domain.model.BleScanError
 import com.tomazcuber.kleanble.scan.domain.model.BleScanState
 import kotlinx.coroutines.flow.first
@@ -13,20 +13,20 @@ import strikt.assertions.isEqualTo
 
 class ObserveScanStateUseCaseTest {
 
-    private lateinit var fakeScanRepository: FakeScanRepository
+    private lateinit var fakeScanDataSource: FakeScanDataSource
     private lateinit var observeScanStateUseCase: ObserveScanStateUseCase
 
     @BeforeEach
     fun setUp() {
-        fakeScanRepository = FakeScanRepository()
-        observeScanStateUseCase = ObserveScanStateUseCase(fakeScanRepository)
+        fakeScanDataSource = FakeScanDataSource()
+        observeScanStateUseCase = ObserveScanStateUseCase(fakeScanDataSource)
     }
 
     @Test
     fun `invoke should return the scan state flow from the repository`() = runTest {
         // Arrange
         val expectedState = BleScanState.Scanning
-        fakeScanRepository.setScanState(expectedState)
+        fakeScanDataSource.setScanState(expectedState)
 
         // Act
         val scanStateFlow = observeScanStateUseCase()
@@ -41,7 +41,7 @@ class ObserveScanStateUseCaseTest {
         // Arrange
         val expectedErrorReason = BleScanError.BLUETOOTH_DISABLED
         val expectedState = BleScanState.Error(expectedErrorReason)
-        fakeScanRepository.setScanState(expectedState)
+        fakeScanDataSource.setScanState(expectedState)
 
         // Act
         val scanStateFlow = observeScanStateUseCase()

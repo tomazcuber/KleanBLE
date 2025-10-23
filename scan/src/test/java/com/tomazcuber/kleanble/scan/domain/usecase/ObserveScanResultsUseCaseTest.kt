@@ -1,7 +1,8 @@
 package com.tomazcuber.kleanble.scan.domain.usecase
 
-import com.tomazcuber.kleanble.scan.domain.FakeScanRepository
+import com.tomazcuber.kleanble.scan.domain.FakeScanDataSource
 import com.tomazcuber.kleanble.scan.domain.model.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -12,15 +13,16 @@ import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import java.util.UUID
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ObserveScanResultsUseCaseTest {
 
-    private lateinit var fakeScanRepository: FakeScanRepository
+    private lateinit var fakeScanDataSource: FakeScanDataSource
     private lateinit var observeScanResultsUseCase: ObserveScanResultsUseCase
 
     @BeforeEach
     fun setUp() {
-        fakeScanRepository = FakeScanRepository()
-        observeScanResultsUseCase = ObserveScanResultsUseCase(fakeScanRepository)
+        fakeScanDataSource = FakeScanDataSource()
+        observeScanResultsUseCase = ObserveScanResultsUseCase(fakeScanDataSource)
     }
 
     @Test
@@ -59,7 +61,7 @@ class ObserveScanResultsUseCaseTest {
         }
 
         // Emit the value from the fake repository
-        fakeScanRepository.emitScanResult(expectedResult)
+        fakeScanDataSource.emitScanResult(expectedResult)
 
         // Cancel the collector to clean up resources
         job.cancel()

@@ -1,8 +1,8 @@
 package com.tomazcuber.kleanble.scan.di
 
 import com.tomazcuber.kleanble.scan.api.BleScanner
-import com.tomazcuber.kleanble.scan.data.ScanRepositoryImpl
-import com.tomazcuber.kleanble.scan.domain.repository.ScanRepository
+import com.tomazcuber.kleanble.scan.data.repository.LiveScanDataSourceImpl
+import com.tomazcuber.kleanble.scan.domain.repository.LiveScanDataSource
 import com.tomazcuber.kleanble.scan.domain.usecase.ObserveScanResultsUseCase
 import com.tomazcuber.kleanble.scan.domain.usecase.ObserveScanStateUseCase
 import com.tomazcuber.kleanble.scan.domain.usecase.StartScanUseCase
@@ -15,8 +15,8 @@ import org.koin.dsl.module
 val scanModule = module {
 
     // Repository
-    single<ScanRepository> {
-        ScanRepositoryImpl(
+    single<LiveScanDataSource> {
+        LiveScanDataSourceImpl(
             context = androidContext(),
             dispatcher = Dispatchers.IO
         )
