@@ -29,7 +29,7 @@ internal class BleScannerImpl(
         observeScanStateUseCase()
     }
 
-    override val scanResults: Flow<BleScanResult> by lazy {
+    override val scanResults: Flow<List<BleScanResult>> by lazy {
         observeScanResultsUseCase()
     }
 

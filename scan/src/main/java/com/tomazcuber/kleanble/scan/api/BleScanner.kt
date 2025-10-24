@@ -25,12 +25,10 @@ interface BleScanner {
     val scanState: StateFlow<BleScanState>
 
     /**
-     * A flow that emits [BleScanResult] objects as devices are discovered.
-     *
-     * This flow is cold, meaning the scan will only be active while the flow is being collected.
-     * Collection of this flow is what triggers the underlying scan mechanism.
+     * A flow that emits a complete and curated list of [BleScanResult] objects.
+     * This list represents all devices currently considered "active" by the cache.
      */
-    val scanResults: Flow<BleScanResult>
+    val scanResults: Flow<List<BleScanResult>>
 
     /**
      * Starts a new BLE scan with the specified configuration.
