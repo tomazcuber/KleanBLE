@@ -1,4 +1,4 @@
-import com.tomazcuber.kleanble.scan.domain.FakeScanDataSource
+import com.tomazcuber.kleanble.scan.domain.FakeScanRepository
 import com.tomazcuber.kleanble.scan.domain.model.BleScanFilter
 import com.tomazcuber.kleanble.scan.domain.model.BleScanSettings
 import com.tomazcuber.kleanble.scan.domain.model.ScanCallbackType
@@ -15,13 +15,13 @@ import strikt.assertions.isTrue
 
 class StartScanUseCaseTest {
 
-    private lateinit var fakeScanDataSource: FakeScanDataSource
+    private lateinit var fakeScanRepository: FakeScanRepository
     private lateinit var startScanUseCase: StartScanUseCase
 
     @BeforeEach
     fun setUp() {
-        fakeScanDataSource = FakeScanDataSource()
-        startScanUseCase = StartScanUseCase(fakeScanDataSource)
+        fakeScanRepository = FakeScanRepository()
+        startScanUseCase = StartScanUseCase(fakeScanRepository)
     }
 
     @Test
@@ -37,7 +37,7 @@ class StartScanUseCaseTest {
         startScanUseCase(settings, filters)
 
         // Assert
-        expectThat(fakeScanDataSource.startScanCalled).isTrue()
+        expectThat(fakeScanRepository.startScanCalled).isTrue()
     }
 
     @Test
@@ -54,7 +54,7 @@ class StartScanUseCaseTest {
         startScanUseCase(settings, filters)
 
         // Assert
-        expectThat(fakeScanDataSource.receivedFilters)
+        expectThat(fakeScanRepository.receivedFilters)
             .isNotNull()
             .hasSize(1)
             .first()

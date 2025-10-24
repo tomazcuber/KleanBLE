@@ -1,11 +1,9 @@
 package com.tomazcuber.kleanble.scan.domain.usecase
 
-import com.tomazcuber.kleanble.scan.domain.FakeScanDataSource
+import com.tomazcuber.kleanble.scan.domain.FakeScanRepository
 import com.tomazcuber.kleanble.scan.domain.model.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -16,17 +14,17 @@ import java.util.UUID
 @OptIn(ExperimentalCoroutinesApi::class)
 class ObserveScanResultsUseCaseTest {
 
-    private lateinit var fakeScanDataSource: FakeScanDataSource
+    private lateinit var fakeScanRepository: FakeScanRepository
     private lateinit var observeScanResultsUseCase: ObserveScanResultsUseCase
 
     @BeforeEach
     fun setUp() {
-        fakeScanDataSource = FakeScanDataSource()
-        observeScanResultsUseCase = ObserveScanResultsUseCase(fakeScanDataSource)
+        fakeScanRepository = FakeScanRepository()
+        observeScanResultsUseCase = ObserveScanResultsUseCase(fakeScanRepository)
     }
 
     @Test
-    fun `invoke should return the scan results flow from the repository`() = runTest(UnconfinedTestDispatcher()) {
+    fun `invoke should return the scan results flow from the repository`() = runTest {
         // Arrange
         val dummyRecord = BleScanRecord(
             advertiseFlags = -1,
@@ -49,21 +47,14 @@ class ObserveScanResultsUseCaseTest {
             scanRecord = dummyRecord,
             timestampNanos = 12345L
         )
+        val expectedList = listOf(expectedResult)
 
         // Act
         val scanResultsFlow = observeScanResultsUseCase()
+        fakeScanRepository.emitScanResultList(expectedList)
 
         // Assert
-        // Launch a collector in the background to receive the emission
-        val job = launch {
-            val actualResult = scanResultsFlow.first()
-            expectThat(actualResult).isEqualTo(expectedResult)
-        }
-
-        // Emit the value from the fake repository
-        fakeScanDataSource.emitScanResult(expectedResult)
-
-        // Cancel the collector to clean up resources
-        job.cancel()
+        val actualList = scanResultsFlow.first()
+        expectThat(actualList).isEqualTo(expectedList)
     }
 }
