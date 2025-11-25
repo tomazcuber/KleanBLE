@@ -18,44 +18,45 @@ import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
-val scanModule = module {
+val scanModule =
+    module {
 
-    // Top-level Repository (with caching)
-    single<ScanRepository> {
-        ScanRepositoryImpl(
-            liveDataSource = get(),
-            cacheDataSource = get(),
-            dispatcher = Dispatchers.IO
-        )
+        // Top-level Repository (with caching)
+        single<ScanRepository> {
+            ScanRepositoryImpl(
+                liveDataSource = get(),
+                cacheDataSource = get(),
+                dispatcher = Dispatchers.IO,
+            )
+        }
+
+        // Live Data Source (hardware)
+        single<LiveScanDataSource> {
+            LiveScanDataSourceImpl(
+                context = androidContext(),
+                dispatcher = Dispatchers.IO,
+            )
+        }
+
+        // Cache Data Source (in-memory)
+        single<ScanCacheDataSource> { InMemoryDeviceCache(clock = get()) }
+
+        // Clock utility
+        single<Clock> { SystemClock() }
+
+        // Use Cases
+        factory { ObserveScanStateUseCase(get()) }
+        factory { ObserveScanResultsUseCase(get()) }
+        factory { StartScanUseCase(get()) }
+        factory { StopScanUseCase(get()) }
+
+        // Public API
+        single<BleScanner> {
+            BleScannerImpl(
+                observeScanStateUseCase = get(),
+                observeScanResultsUseCase = get(),
+                startScanUseCase = get(),
+                stopScanUseCase = get(),
+            )
+        }
     }
-
-    // Live Data Source (hardware)
-    single<LiveScanDataSource> {
-        LiveScanDataSourceImpl(
-            context = androidContext(),
-            dispatcher = Dispatchers.IO
-        )
-    }
-
-    // Cache Data Source (in-memory)
-    single<ScanCacheDataSource> { InMemoryDeviceCache(clock = get()) }
-
-    // Clock utility
-    single<Clock> { SystemClock() }
-
-    // Use Cases
-    factory { ObserveScanStateUseCase(get()) }
-    factory { ObserveScanResultsUseCase(get()) }
-    factory { StartScanUseCase(get()) }
-    factory { StopScanUseCase(get()) }
-
-    // Public API
-    single<BleScanner> {
-        BleScannerImpl(
-            observeScanStateUseCase = get(),
-            observeScanResultsUseCase = get(),
-            startScanUseCase = get(),
-            stopScanUseCase = get()
-        )
-    }
-}

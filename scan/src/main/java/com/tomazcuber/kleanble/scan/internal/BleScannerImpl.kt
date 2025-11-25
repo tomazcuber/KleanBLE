@@ -22,9 +22,8 @@ internal class BleScannerImpl(
     private val observeScanStateUseCase: ObserveScanStateUseCase,
     private val observeScanResultsUseCase: ObserveScanResultsUseCase,
     private val startScanUseCase: StartScanUseCase,
-    private val stopScanUseCase: StopScanUseCase
+    private val stopScanUseCase: StopScanUseCase,
 ) : BleScanner {
-
     override val scanState: StateFlow<BleScanState> by lazy {
         observeScanStateUseCase()
     }
@@ -33,7 +32,10 @@ internal class BleScannerImpl(
         observeScanResultsUseCase()
     }
 
-    override fun startScan(settings: BleScanSettings, filters: List<BleScanFilter>) {
+    override fun startScan(
+        settings: BleScanSettings,
+        filters: List<BleScanFilter>,
+    ) {
         startScanUseCase(settings, filters)
     }
 

@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.asStateFlow
  * A fake implementation of the [ScanRepository] for use in unit tests.
  */
 internal class FakeScanRepository : ScanRepository {
-
     private val _scanState = MutableStateFlow<BleScanState>(BleScanState.Idle)
     override val scanState = _scanState.asStateFlow()
 
@@ -32,7 +31,10 @@ internal class FakeScanRepository : ScanRepository {
     var receivedFilters: List<BleScanFilter>? = null
         private set
 
-    override fun startScan(settings: BleScanSettings, filters: List<BleScanFilter>) {
+    override fun startScan(
+        settings: BleScanSettings,
+        filters: List<BleScanFilter>,
+    ) {
         startScanCalled = true
         receivedSettings = settings
         receivedFilters = filters

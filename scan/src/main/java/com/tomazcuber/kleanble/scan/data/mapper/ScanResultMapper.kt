@@ -5,53 +5,56 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.le.ScanRecord
 import android.bluetooth.le.ScanResult
 import android.os.ParcelUuid
+import androidx.core.util.size
 import com.tomazcuber.kleanble.scan.domain.model.BleScanRecord
 import com.tomazcuber.kleanble.scan.domain.model.BleScanResult
 import com.tomazcuber.kleanble.scan.domain.model.BleScannedDevice
 import com.tomazcuber.kleanble.scan.domain.model.BondState
 import com.tomazcuber.kleanble.scan.domain.model.DeviceType
-import androidx.core.util.size
 
 @SuppressLint("MissingPermission")
 fun ScanResult.toBleScanResult(): BleScanResult {
-    val bleScannedDevice = BleScannedDevice(
-        name = device.name,
-        macAddress = device.address,
-        bondState = device.bondState.toBondState(),
-        deviceType = device.type.toDeviceType(),
-    )
+    val bleScannedDevice =
+        BleScannedDevice(
+            name = device.name,
+            macAddress = device.address,
+            bondState = device.bondState.toBondState(),
+            deviceType = device.type.toDeviceType(),
+        )
 
-    val bleScanRecord = scanRecord?.toBleScanRecord() ?: BleScanRecord(
-        advertiseFlags = -1,
-        deviceName = null,
-        serviceUuids = emptyList(),
-        serviceData = emptyMap(),
-        manufacturerSpecificData = emptyMap(),
-        transmissionPowerLevel = null,
-        rawBytes = byteArrayOf()
-    )
+    val bleScanRecord =
+        scanRecord?.toBleScanRecord() ?: BleScanRecord(
+            advertiseFlags = -1,
+            deviceName = null,
+            serviceUuids = emptyList(),
+            serviceData = emptyMap(),
+            manufacturerSpecificData = emptyMap(),
+            transmissionPowerLevel = null,
+            rawBytes = byteArrayOf(),
+        )
 
     return BleScanResult(
         device = bleScannedDevice,
         rssi = rssi,
         scanRecord = bleScanRecord,
-        timestampNanos = timestampNanos
+        timestampNanos = timestampNanos,
     )
 }
 
-private fun Int.toDeviceType(): DeviceType = when (this) {
-    BluetoothDevice.DEVICE_TYPE_LE -> DeviceType.LE
-    BluetoothDevice.DEVICE_TYPE_CLASSIC -> DeviceType.CLASSIC
-    BluetoothDevice.DEVICE_TYPE_DUAL -> DeviceType.DUAL
-    else -> DeviceType.UNKNOWN
-}
+private fun Int.toDeviceType(): DeviceType =
+    when (this) {
+        BluetoothDevice.DEVICE_TYPE_LE -> DeviceType.LE
+        BluetoothDevice.DEVICE_TYPE_CLASSIC -> DeviceType.CLASSIC
+        BluetoothDevice.DEVICE_TYPE_DUAL -> DeviceType.DUAL
+        else -> DeviceType.UNKNOWN
+    }
 
-private fun Int.toBondState(): BondState = when (this) {
-    BluetoothDevice.BOND_BONDED -> BondState.BONDED
-    BluetoothDevice.BOND_BONDING -> BondState.BONDING
-    else -> BondState.NONE
-}
-
+private fun Int.toBondState(): BondState =
+    when (this) {
+        BluetoothDevice.BOND_BONDED -> BondState.BONDED
+        BluetoothDevice.BOND_BONDING -> BondState.BONDING
+        else -> BondState.NONE
+    }
 
 private fun ScanRecord.toBleScanRecord(): BleScanRecord {
     val serviceUuids = this.serviceUuids?.map(ParcelUuid::getUuid) ?: emptyList()
@@ -69,6 +72,6 @@ private fun ScanRecord.toBleScanRecord(): BleScanRecord {
         serviceData = serviceData,
         manufacturerSpecificData = manufacturerData,
         transmissionPowerLevel = if (this.txPowerLevel == Int.MIN_VALUE) null else this.txPowerLevel,
-        rawBytes = this.bytes
+        rawBytes = this.bytes,
     )
 }

@@ -6,15 +6,14 @@ import com.tomazcuber.kleanble.permissionshelper.domain.model.BlePermissionsRepo
 import com.tomazcuber.kleanble.permissionshelper.domain.usecase.GetPermissionsReportForBleOperationUseCase
 
 internal class BlePermissionsCheckerImpl(
-    private val getPermissionsReportForBleOperationUseCase: GetPermissionsReportForBleOperationUseCase
-): BlePermissionsChecker {
+    private val getPermissionsReportForBleOperationUseCase: GetPermissionsReportForBleOperationUseCase,
+) : BlePermissionsChecker {
     override suspend fun getPermissionsReportFor(
         operations: Set<BleOperation>,
-        appDerivesLocationFromScan: Boolean
-    ): BlePermissionsReport {
-        return getPermissionsReportForBleOperationUseCase(
+        appDerivesLocationFromScan: Boolean,
+    ): BlePermissionsReport =
+        getPermissionsReportForBleOperationUseCase(
             operations = operations,
-            appDerivesLocationFromScan = appDerivesLocationFromScan
+            appDerivesLocationFromScan = appDerivesLocationFromScan,
         )
-    }
 }

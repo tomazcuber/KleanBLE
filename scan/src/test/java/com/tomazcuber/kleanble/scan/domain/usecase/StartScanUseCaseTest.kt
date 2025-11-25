@@ -14,7 +14,6 @@ import strikt.assertions.isNotNull
 import strikt.assertions.isTrue
 
 class StartScanUseCaseTest {
-
     private lateinit var fakeScanRepository: FakeScanRepository
     private lateinit var startScanUseCase: StartScanUseCase
 
@@ -27,10 +26,11 @@ class StartScanUseCaseTest {
     @Test
     fun `invoke should call startScan on the repository`() {
         // Arrange
-        val settings = BleScanSettings(
-            scanMode = ScanMode.LOW_LATENCY,
-            callbackType = ScanCallbackType.ALL_MATCHES
-        )
+        val settings =
+            BleScanSettings(
+                scanMode = ScanMode.LOW_LATENCY,
+                callbackType = ScanCallbackType.ALL_MATCHES,
+            )
         val filters = emptyList<BleScanFilter>()
 
         // Act
@@ -43,10 +43,11 @@ class StartScanUseCaseTest {
     @Test
     fun `invoke with filter passes filter to repository`() {
         // Arrange
-        val settings = BleScanSettings(
-            scanMode = ScanMode.LOW_LATENCY,
-            callbackType = ScanCallbackType.ALL_MATCHES
-        )
+        val settings =
+            BleScanSettings(
+                scanMode = ScanMode.LOW_LATENCY,
+                callbackType = ScanCallbackType.ALL_MATCHES,
+            )
         val testFilter = BleScanFilter(deviceName = "TestDevice")
         val filters = listOf(testFilter)
 

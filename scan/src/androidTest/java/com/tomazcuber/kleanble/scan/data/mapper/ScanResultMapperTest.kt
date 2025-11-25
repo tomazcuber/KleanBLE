@@ -20,7 +20,6 @@ import java.util.UUID
 
 @RunWith(AndroidJUnit4::class)
 class ScanResultMapperTest {
-
     @Test
     fun test_fullScanResult_mapsToDomainModelCorrectly() {
         // Arrange
@@ -31,30 +30,33 @@ class ScanResultMapperTest {
         val serviceData = byteArrayOf(0x03, 0x04)
         val rawBytes = byteArrayOf(0x01, 0x02, 0x03, 0x04, 0x05)
 
-        val mockDevice = mockk<BluetoothDevice> {
-            every { name } returns "TestDevice"
-            every { address } returns "00:11:22:AA:BB:CC"
-            every { bondState } returns BluetoothDevice.BOND_BONDED
-            every { type } returns BluetoothDevice.DEVICE_TYPE_DUAL
-        }
+        val mockDevice =
+            mockk<BluetoothDevice> {
+                every { name } returns "TestDevice"
+                every { address } returns "00:11:22:AA:BB:CC"
+                every { bondState } returns BluetoothDevice.BOND_BONDED
+                every { type } returns BluetoothDevice.DEVICE_TYPE_DUAL
+            }
 
-        val mockScanRecord = mockk<ScanRecord> {
-            every { advertiseFlags } returns 0b0110
-            every { deviceName } returns "TestDevice"
-            every { serviceUuids } returns listOf(ParcelUuid(serviceUuid))
-            every { getServiceData(ParcelUuid(serviceDataUuid)) } returns serviceData
-            every { this@mockk.serviceData } returns mapOf(ParcelUuid(serviceDataUuid) to serviceData)
-            every { manufacturerSpecificData } returns SparseArray<ByteArray>().apply { put(manufacturerId, manufacturerData) }
-            every { txPowerLevel } returns -50
-            every { bytes } returns rawBytes
-        }
+        val mockScanRecord =
+            mockk<ScanRecord> {
+                every { advertiseFlags } returns 0b0110
+                every { deviceName } returns "TestDevice"
+                every { serviceUuids } returns listOf(ParcelUuid(serviceUuid))
+                every { getServiceData(ParcelUuid(serviceDataUuid)) } returns serviceData
+                every { this@mockk.serviceData } returns mapOf(ParcelUuid(serviceDataUuid) to serviceData)
+                every { manufacturerSpecificData } returns SparseArray<ByteArray>().apply { put(manufacturerId, manufacturerData) }
+                every { txPowerLevel } returns -50
+                every { bytes } returns rawBytes
+            }
 
-        val mockScanResult = mockk<ScanResult> {
-            every { device } returns mockDevice
-            every { rssi } returns -65
-            every { timestampNanos } returns 123456789L
-            every { scanRecord } returns mockScanRecord
-        }
+        val mockScanResult =
+            mockk<ScanResult> {
+                every { device } returns mockDevice
+                every { rssi } returns -65
+                every { timestampNanos } returns 123456789L
+                every { scanRecord } returns mockScanRecord
+            }
 
         // Act
         val domainResult = mockScanResult.toBleScanResult()
@@ -84,19 +86,21 @@ class ScanResultMapperTest {
     @Test
     fun test_scanResultWithNulls_mapsGracefully() {
         // Arrange
-        val mockDevice = mockk<BluetoothDevice> {
-            every { name } returns null
-            every { address } returns "00:11:22:AA:BB:CC"
-            every { bondState } returns BluetoothDevice.BOND_NONE
-            every { type } returns BluetoothDevice.DEVICE_TYPE_UNKNOWN
-        }
+        val mockDevice =
+            mockk<BluetoothDevice> {
+                every { name } returns null
+                every { address } returns "00:11:22:AA:BB:CC"
+                every { bondState } returns BluetoothDevice.BOND_NONE
+                every { type } returns BluetoothDevice.DEVICE_TYPE_UNKNOWN
+            }
 
-        val mockScanResult = mockk<ScanResult> {
-            every { device } returns mockDevice
-            every { rssi } returns -70
-            every { timestampNanos } returns 98765L
-            every { scanRecord } returns null // Test null scan record
-        }
+        val mockScanResult =
+            mockk<ScanResult> {
+                every { device } returns mockDevice
+                every { rssi } returns -70
+                every { timestampNanos } returns 98765L
+                every { scanRecord } returns null // Test null scan record
+            }
 
         // Act
         val domainResult = mockScanResult.toBleScanResult()

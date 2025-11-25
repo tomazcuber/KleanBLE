@@ -14,18 +14,20 @@ import java.util.concurrent.ConcurrentHashMap
  *
  * This class is thread-safe and uses a [ConcurrentHashMap] to store scan results.
  */
-internal class InMemoryDeviceCache(private val clock: Clock) : ScanCacheDataSource {
-
+internal class InMemoryDeviceCache(
+    private val clock: Clock,
+) : ScanCacheDataSource {
     private val _devices = MutableStateFlow<List<BleScanResult>>(emptyList())
     override val devices: Flow<List<BleScanResult>> = _devices.asStateFlow()
 
     private val cache = ConcurrentHashMap<String, CachedBleScanResult>()
 
     override fun addOrUpdate(bleScanResult: BleScanResult) {
-        val cachedResult = CachedBleScanResult(
-            result = bleScanResult,
-            lastSeen = clock.currentTimeMillis()
-        )
+        val cachedResult =
+            CachedBleScanResult(
+                result = bleScanResult,
+                lastSeen = clock.currentTimeMillis(),
+            )
         cache[bleScanResult.device.macAddress] = cachedResult
         emitCurrentList()
     }

@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/commonutils" />
             <option value="$PROJECT_DIR$/kleanble" />
             <option value="$PROJECT_DIR$/permissionshelper" />
+            <option value="$PROJECT_DIR$/scan" />
           </set>
         </option>
       </GradleProjectSettings>

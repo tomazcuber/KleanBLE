@@ -17,5 +17,5 @@ enum class BondState {
     /**
      * The device is paired.
      */
-    BONDED
+    BONDED,
 }

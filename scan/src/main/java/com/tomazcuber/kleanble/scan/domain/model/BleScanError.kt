@@ -42,5 +42,5 @@ enum class BleScanError {
     /**
      * An unknown error occurred.
      */
-    UNKNOWN
+    UNKNOWN,
 }

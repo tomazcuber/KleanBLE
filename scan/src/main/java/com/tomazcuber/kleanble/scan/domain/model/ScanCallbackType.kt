@@ -20,5 +20,5 @@ enum class ScanCallbackType {
      * A callback is triggered when a device that was previously found is no longer being advertised.
      * This requires hardware support and is not guaranteed to be available on all devices.
      */
-    MATCH_LOST
+    MATCH_LOST,
 }

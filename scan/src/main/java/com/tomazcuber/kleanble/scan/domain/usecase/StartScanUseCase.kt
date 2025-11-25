@@ -7,10 +7,12 @@ import com.tomazcuber.kleanble.scan.domain.repository.ScanRepository
 /**
  * A use case for starting a BLE scan.
  */
-internal class StartScanUseCase(private val scanRepository: ScanRepository) {
+internal class StartScanUseCase(
+    private val scanRepository: ScanRepository,
+) {
     operator fun invoke(
         settings: BleScanSettings,
-        filters: List<BleScanFilter> = emptyList()
+        filters: List<BleScanFilter> = emptyList(),
     ) {
         scanRepository.startScan(settings, filters)
     }

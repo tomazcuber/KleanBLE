@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.StateFlow
  * providing a clean, reactive API for starting/stopping scans and observing results.
  */
 interface BleScanner {
-
     /**
      * A hot flow that emits the current state of the BLE scanner (e.g., Idle, Scanning, Error).
      *
@@ -41,7 +40,7 @@ interface BleScanner {
      */
     fun startScan(
         settings: BleScanSettings,
-        filters: List<BleScanFilter> = emptyList()
+        filters: List<BleScanFilter> = emptyList(),
     )
 
     /**

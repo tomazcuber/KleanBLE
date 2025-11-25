@@ -17,14 +17,14 @@ import java.util.UUID
 
 @RunWith(AndroidJUnit4::class)
 class ScanSettingsAndFilterMapperTest {
-
     @Test
     fun test_bleScanSettings_mapsToAndroidScanSettingsCorrectly() {
         // Arrange
-        val domainSettings = BleScanSettings(
-            scanMode = ScanMode.LOW_LATENCY,
-            callbackType = ScanCallbackType.ALL_MATCHES
-        )
+        val domainSettings =
+            BleScanSettings(
+                scanMode = ScanMode.LOW_LATENCY,
+                callbackType = ScanCallbackType.ALL_MATCHES,
+            )
 
         // Act
         val androidSettings = domainSettings.toAndroid()
@@ -41,12 +41,13 @@ class ScanSettingsAndFilterMapperTest {
         val manufacturerId = 0x004C // Apple
         val manufacturerData = byteArrayOf(0x02, 0x15)
 
-        val domainFilter = BleScanFilter(
-            deviceName = "TestDevice",
-            deviceAddress = "00:11:22:33:44:55",
-            serviceUuid = serviceUuid,
-            manufacturerData = Pair(manufacturerId, manufacturerData)
-        )
+        val domainFilter =
+            BleScanFilter(
+                deviceName = "TestDevice",
+                deviceAddress = "00:11:22:33:44:55",
+                serviceUuid = serviceUuid,
+                manufacturerData = Pair(manufacturerId, manufacturerData),
+            )
 
         // Act
         val androidFilter = domainFilter.toAndroid()

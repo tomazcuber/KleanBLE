@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.StateFlow
  * allowing the domain and repository layers to remain decoupled from the platform details.
  */
 interface LiveScanDataSource {
-
     /**
      * A hot flow that emits the current state of the BLE scanner (e.g., Idle, Scanning, Error).
      * Clients can collect this flow to react to changes in the scanner's status.
@@ -36,7 +35,10 @@ interface LiveScanDataSource {
      * @param filters A list of filters to apply. The scanner will only report devices
      * that match one or more of these filters. If the list is empty, all found devices will be reported.
      */
-    fun startScan(settings: BleScanSettings, filters: List<BleScanFilter>)
+    fun startScan(
+        settings: BleScanSettings,
+        filters: List<BleScanFilter>,
+    )
 
     /**
      * Stops any ongoing BLE scan.
