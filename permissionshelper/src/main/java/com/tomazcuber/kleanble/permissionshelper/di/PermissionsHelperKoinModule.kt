@@ -1,7 +1,9 @@
 package com.tomazcuber.kleanble.permissionshelper.di
 
 import com.tomazcuber.kleanble.permissionshelper.api.BlePermissionsChecker
+import com.tomazcuber.kleanble.permissionshelper.data.repository.BuildVersionRepositoryImpl
 import com.tomazcuber.kleanble.permissionshelper.data.repository.PermissionRepositoryImpl
+import com.tomazcuber.kleanble.permissionshelper.domain.repository.BuildVersionRepository
 import com.tomazcuber.kleanble.permissionshelper.domain.repository.PermissionRepository
 import com.tomazcuber.kleanble.permissionshelper.domain.usecase.GetPermissionsReportForBleOperationUseCase
 import com.tomazcuber.kleanble.permissionshelper.internal.BlePermissionsCheckerImpl
@@ -19,5 +21,9 @@ val permissionsHelperModule = module {
 
     single<PermissionRepository> {
         PermissionRepositoryImpl(context = androidContext())
+    }
+
+    single<BuildVersionRepository> {
+        BuildVersionRepositoryImpl()
     }
 }
