@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.tomazcuber.kleanble"
+    namespace = "com.tomazcuber.kleanble.core"
     compileSdk = 35
 
     defaultConfig {
@@ -33,19 +33,11 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
 
-    androidTestImplementation(libs.androidx.espresso.core)
-
-    implementation(project.dependencies.platform(libs.koin.bom))
+    // Koin for internal isolated DI
+    implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
-
-    testImplementation(libs.bundles.junit5)
-    testRuntimeOnly(libs.junit.jupiter.engine)
-
-    // Feature Modules:
-    implementation(project(":permissionshelper"))
+    implementation(libs.koin.android)
 }

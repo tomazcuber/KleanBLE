@@ -2,14 +2,16 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.android.junit5)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.ktlint)
 }
 
 android {
     namespace = "com.tomazcuber.kleanble.permissionshelper"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
-        minSdk = 24
+        minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -20,7 +22,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -31,7 +33,12 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+}
 
+detekt {
+    toolVersion = libs.versions.detekt.toString()
+    config.setFrom(file("config/detekt/detekt.yml"))
+    buildUponDefaultConfig = true
 }
 
 dependencies {
@@ -51,4 +58,5 @@ dependencies {
     implementation(libs.koin.android)
 
     implementation(project(":commonutils"))
+    implementation(project(":core"))
 }
