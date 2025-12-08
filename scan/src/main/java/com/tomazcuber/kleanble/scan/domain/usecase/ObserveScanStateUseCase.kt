@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.StateFlow
 /**
  * A use case that provides access to the current state of the BLE scanner.
  */
-internal class ObserveScanStateUseCase(private val scanRepository: ScanRepository) {
+internal class ObserveScanStateUseCase(
+    private val scanRepository: ScanRepository,
+) {
     operator fun invoke(): StateFlow<BleScanState> = scanRepository.scanState
 }

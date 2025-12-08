@@ -7,7 +7,6 @@ import strikt.api.expectThat
 import strikt.assertions.isTrue
 
 class StopScanUseCaseTest {
-
     private lateinit var fakeScanRepository: FakeScanRepository
     private lateinit var stopScanUseCase: StopScanUseCase
 

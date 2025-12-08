@@ -8,7 +8,6 @@ import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanSettings
 import android.content.Context
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.tomazcuber.kleanble.scan.data.ScanRepositoryImpl
 import com.tomazcuber.kleanble.scan.domain.model.BleScanError
 import com.tomazcuber.kleanble.scan.domain.model.BleScanSettings
 import com.tomazcuber.kleanble.scan.domain.model.BleScanState
@@ -31,14 +30,14 @@ import strikt.assertions.isEqualTo
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
-class ScanRepositoryImplTest {
+class LiveScanDataSourceImplTest {
 
     private lateinit var mockContext: Context
     private lateinit var mockBluetoothManager: BluetoothManager
     private lateinit var mockBluetoothAdapter: BluetoothAdapter
     private lateinit var mockBluetoothLeScanner: BluetoothLeScanner
 
-    private lateinit var repository: ScanRepositoryImpl
+    private lateinit var repository: LiveScanDataSourceImpl
 
     @Before
     fun setUp() {
@@ -55,7 +54,7 @@ class ScanRepositoryImplTest {
         }
 
         // Instantiate the repository with mocks and a test dispatcher
-        repository = ScanRepositoryImpl(mockContext, Dispatchers.Main)
+        repository = LiveScanDataSourceImpl(mockContext, Dispatchers.Main)
     }
 
     @Test

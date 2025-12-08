@@ -13,11 +13,13 @@ sealed interface BleScanState {
     /**
      * The scanner is actively searching for nearby devices that match the filter criteria.
      */
-    data object Scanning: BleScanState
+    data object Scanning : BleScanState
 
     /**
      * The scanner has stopped due to a failure.
      * @property reason The specific reason for the error, as defined in [BleScanError].
      */
-    data class Error(val reason: BleScanError) : BleScanState
+    data class Error(
+        val reason: BleScanError,
+    ) : BleScanState
 }

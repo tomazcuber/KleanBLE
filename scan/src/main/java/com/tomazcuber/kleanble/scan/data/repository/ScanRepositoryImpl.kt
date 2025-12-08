@@ -1,92 +1,69 @@
-package com.tomazcuber.kleanble.scan.data
+package com.tomazcuber.kleanble.scan.data.repository
 
-import android.annotation.SuppressLint
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothManager
-import android.bluetooth.le.BluetoothLeScanner
-import android.bluetooth.le.ScanCallback
-import android.content.Context
-import android.bluetooth.le.ScanResult
-import com.tomazcuber.kleanble.scan.data.mapper.toAndroid
-import com.tomazcuber.kleanble.scan.data.mapper.toBleScanResult
-import com.tomazcuber.kleanble.scan.domain.model.BleScanError
 import com.tomazcuber.kleanble.scan.domain.model.BleScanFilter
 import com.tomazcuber.kleanble.scan.domain.model.BleScanResult
 import com.tomazcuber.kleanble.scan.domain.model.BleScanSettings
 import com.tomazcuber.kleanble.scan.domain.model.BleScanState
+import com.tomazcuber.kleanble.scan.domain.repository.LiveScanDataSource
+import com.tomazcuber.kleanble.scan.domain.repository.ScanCacheDataSource
 import com.tomazcuber.kleanble.scan.domain.repository.ScanRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
-@SuppressLint("MissingPermission")
+/**
+ * The default implementation of the [ScanRepository].
+ *
+ * This class orchestrates the live data from the [LiveScanDataSource] and the cached data
+ * from the [ScanCacheDataSource] to provide a stable, curated list of discovered devices.
+ */
 internal class ScanRepositoryImpl(
-    private val context: Context,
-    private val dispatcher: CoroutineDispatcher
+    private val liveDataSource: LiveScanDataSource,
+    private val cacheDataSource: ScanCacheDataSource,
+    private val dispatcher: CoroutineDispatcher,
 ) : ScanRepository {
+    private var scanJob: Job? = null
 
-    private val bluetoothManager: BluetoothManager by lazy { context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager }
-    private val bluetoothAdapter: BluetoothAdapter? by lazy { bluetoothManager.adapter }
-    private val bluetoothLeScanner: BluetoothLeScanner? by lazy { bluetoothAdapter?.bluetoothLeScanner }
-
-    private val _scanState = MutableStateFlow<BleScanState>(BleScanState.Idle)
-    override val scanState = _scanState.asStateFlow()
-
-    private val _scanResults = MutableSharedFlow<BleScanResult>()
-    override val scanResults = _scanResults.asSharedFlow()
-
-    private val scanCallback = object : ScanCallback() {
-        override fun onScanResult(callbackType: Int, result: ScanResult) {
-            CoroutineScope(dispatcher).launch {
-                _scanResults.emit(result.toBleScanResult())
-            }
-        }
-
-        override fun onScanFailed(errorCode: Int) {
-            val reason = when (errorCode) {
-                ScanCallback.SCAN_FAILED_ALREADY_STARTED -> BleScanError.SCAN_FAILED_ALREADY_STARTED
-                ScanCallback.SCAN_FAILED_APPLICATION_REGISTRATION_FAILED -> BleScanError.SCAN_FAILED_APPLICATION_REGISTRATION_FAILED
-                ScanCallback.SCAN_FAILED_FEATURE_UNSUPPORTED -> BleScanError.SCAN_FAILED_FEATURE_UNSUPPORTED
-                ScanCallback.SCAN_FAILED_INTERNAL_ERROR -> BleScanError.SCAN_FAILED_INTERNAL_ERROR
-                else -> BleScanError.UNKNOWN
-            }
-            _scanState.value = BleScanState.Error(reason)
-        }
-    }
+    override val scanState: StateFlow<BleScanState> = liveDataSource.scanState
+    override val scanResults: Flow<List<BleScanResult>> = cacheDataSource.devices
 
     override fun startScan(
         settings: BleScanSettings,
-        filters: List<BleScanFilter>
+        filters: List<BleScanFilter>,
     ) {
-        CoroutineScope(dispatcher).launch {
-            if (bluetoothLeScanner == null) {
-                _scanState.value = BleScanState.Error(BleScanError.BLUETOOTH_UNAVAILABLE)
-                return@launch
+        scanJob?.cancel()
+        cacheDataSource.clear()
+
+        scanJob =
+            CoroutineScope(dispatcher).launch {
+                // Launch a job to listen to the live data source and populate the cache
+                launch {
+                    liveDataSource.scanResults.collect { result ->
+                        cacheDataSource.addOrUpdate(result)
+                    }
+                }
+
+                // Launch a job to periodically prune the cache
+                launch {
+                    while (isActive) {
+                        delay(settings.cacheTimeoutMillis / 2) // Prune more frequently than the timeout
+                        cacheDataSource.pruneExpired(settings.cacheTimeoutMillis)
+                    }
+                }
             }
 
-            if (bluetoothAdapter?.isEnabled == false) {
-                _scanState.value = BleScanState.Error(BleScanError.BLUETOOTH_DISABLED)
-                return@launch
-            }
-
-            val androidSettings = settings.toAndroid()
-            val androidFilters = filters.map { it.toAndroid() }
-
-            try {
-                bluetoothLeScanner?.startScan(androidFilters, androidSettings, scanCallback)
-                _scanState.value = BleScanState.Scanning
-            } catch (e: SecurityException) {
-                _scanState.value = BleScanState.Error(BleScanError.MISSING_PERMISSIONS)
-            }
-        }
+        // Finally, start the underlying hardware scan
+        liveDataSource.startScan(settings, filters)
     }
 
     override fun stopScan() {
-        bluetoothLeScanner?.stopScan(scanCallback)
-        _scanState.value = BleScanState.Idle
+        scanJob?.cancel()
+        liveDataSource.stopScan()
+        cacheDataSource.clear()
     }
 }

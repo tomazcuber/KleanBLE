@@ -12,5 +12,5 @@ data class BleScanResult(
     val device: BleScannedDevice,
     val rssi: Int,
     val scanRecord: BleScanRecord,
-    val timestampNanos: Long
+    val timestampNanos: Long,
 )

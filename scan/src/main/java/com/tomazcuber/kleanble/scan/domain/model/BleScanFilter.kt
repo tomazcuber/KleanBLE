@@ -18,5 +18,5 @@ data class BleScanFilter(
     val deviceName: String? = null,
     val serviceUuid: UUID? = null,
     val deviceAddress: String? = null,
-    val manufacturerData: Pair<Int, ByteArray>? = null
+    val manufacturerData: Pair<Int, ByteArray>? = null,
 )

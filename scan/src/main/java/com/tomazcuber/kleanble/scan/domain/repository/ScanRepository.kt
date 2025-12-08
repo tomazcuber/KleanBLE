@@ -8,40 +8,34 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 /**
- * Defines the contract for the data layer's scanning responsibilities.
+ * The primary repository for the scan feature.
  *
- * This interface abstracts the underlying data source for BLE scanning, allowing the domain layer
- * to remain independent of the Android framework. The implementation of this interface
- * will reside in the data layer.
+ * This interface acts as the single source of truth for scanning, orchestrating live data
+ * from the hardware with a caching layer to provide a clean, stable list of discovered devices.
  */
 interface ScanRepository {
 
     /**
      * A hot flow that emits the current state of the BLE scanner (e.g., Idle, Scanning, Error).
-     * Clients can collect this flow to react to changes in the scanner's status.
      */
     val scanState: StateFlow<BleScanState>
 
     /**
-     * A flow that emits [BleScanResult] objects as devices are discovered.
-     * This flow is cold and will only start emitting when collected.
+     * A flow that emits a complete and curated list of [BleScanResult] objects.
+     * This list represents all devices currently considered "active" by the cache.
      */
-    val scanResults: Flow<BleScanResult>
+    val scanResults: Flow<List<BleScanResult>>
 
     /**
      * Starts a new BLE scan with the specified configuration.
      *
-     * If a scan is already in progress, the ongoing scan will be stopped and a new one will begin.
-     *
-     * @param settings The settings to configure the scan's behavior and power consumption.
-     * @param filters A list of filters to apply. The scanner will only report devices
-     * that match one or more of these filters. If the list is empty, all found devices will be reported.
+     * @param settings The settings to configure the scan, including the cache timeout.
+     * @param filters A list of filters to apply.
      */
     fun startScan(settings: BleScanSettings, filters: List<BleScanFilter>)
 
     /**
      * Stops any ongoing BLE scan.
-     * If no scan is active, this method does nothing.
      */
     fun stopScan()
 }
