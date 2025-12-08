@@ -6,6 +6,6 @@ import com.tomazcuber.kleanble.permissionshelper.domain.model.BlePermissionsRepo
 interface BlePermissionsChecker {
     suspend fun getPermissionsReportFor(
         operations: Set<BleOperation>,
-        appDerivesLocationFromScan: Boolean = false
+        appDerivesLocationFromScan: Boolean = false,
     ): BlePermissionsReport
 }
