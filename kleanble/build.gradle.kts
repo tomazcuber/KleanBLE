@@ -46,6 +46,8 @@ dependencies {
     testImplementation(libs.bundles.junit5)
     testRuntimeOnly(libs.junit.jupiter.engine)
 
-    // Feature Modules:
-    implementation(project(":permissionshelper"))
+    // Feature Modules (exposed via api for Facade pattern):
+    api(project(":permissionshelper"))
+    api(project(":scan"))
+    api(project(":core"))
 }
