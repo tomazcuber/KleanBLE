@@ -1,11 +1,12 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.android.junit5)
 }
 
 android {
     namespace = "com.tomazcuber.kleanble"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 26
@@ -45,6 +46,8 @@ dependencies {
 
     testImplementation(libs.bundles.junit5)
     testRuntimeOnly(libs.junit.jupiter.engine)
+    testImplementation(libs.mockk)
+    testImplementation(libs.strikt)
 
     // Feature Modules (exposed via api for Facade pattern):
     api(project(":permissionshelper"))
