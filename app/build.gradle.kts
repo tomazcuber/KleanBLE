@@ -53,9 +53,6 @@ detekt {
 dependencies {
 
     implementation(project(":kleanble"))
-    implementation(project(":scan"))
-    implementation(project(":permissionshelper"))
-    implementation(project(":core"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
